@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="pl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uniwersytet Civitas | Prestiż w sercu Warszawy</title>
+    <meta name="description" content="Prywatna uczelnia wyższa w Pałacu Kultury i Nauki. Rekrutacja online otwarta.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            DEFAULT: '#082f53',
+                            dark: '#051f38',
+                            light: '#134e85',
+                            accent: '#e2e8f0'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    backgroundImage: {
+                        /* ZMIANA: Tutaj podaj ścieżkę do swojego zdjęcia w folderze img */
+                        'hero-pattern': "url('img/zwiedzanie-palacu-kultury-i-nauki-w-warszawie-2.png')", 
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { opacity: 0; animation: fadeIn 0.5s ease-in forwards; }
+        @keyframes fadeIn { to { opacity: 1; } }
+        /* Efekt hover dla kart kategorii */
+        .category-card:hover .arrow-icon { transform: translateX(5px); }
+
+        /* --- STYLE DO ANIMACJI SCROLLOWANIA --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1s ease-out;
+            will-change: transform, opacity;
+        }
+        
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Opcjonalne opóźnienia dla elementów w grupach */
+        .reveal.delay-100 { transition-delay: 0.1s; }
+        .reveal.delay-200 { transition-delay: 0.2s; }
+        .reveal.delay-300 { transition-delay: 0.3s; }
+    </style>
+</head>
+<body class="font-sans text-slate-800 bg-white antialiased flex flex-col min-h-screen">
+
+    <nav class="sticky top-0 w-full z-40 bg-white/95 backdrop-blur-md border-b border-slate-100 transition-all duration-300 shadow-sm" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <a href="#" class="flex items-center gap-3 group">
+                    <div class="w-10 h-10 bg-brand text-white flex items-center justify-center rounded shadow-md group-hover:bg-brand-light transition shrink-0">
+                        <style>
+                        .palac-rocket-container {
+                            width: 40px;
+                            height: 40px;
+                            position: relative;
+                            overflow: visible;
+                        }
+
+                        .palac-rocket {
+                            width: auto;
+                            height: 40px;
+                            position: absolute;
+                            left: 0;
+                            bottom: 0;
+                            animation: palacStart 2.4s cubic-bezier(.1,.9,.2,1) infinite;
+                            will-change: transform, opacity;
+                        }
+
+                        @keyframes palacStart {
+                            0%   { transform: translateY(0) scale(1); opacity: 1; }
+                            15%  { transform: translateY(-20px) scale(1.03); }
+                            35%  { transform: translateY(-200px) scale(0.95); }
+                            60%  { transform: translateY(-240px) scale(0.88); }
+                            80%  { opacity: 0; }
+                            81%  { transform: translateY(60px) scale(0.6); opacity: 0; }
+                            100% { transform: translateY(0) scale(1); opacity: 1; }
+                        }
+                        </style>
+
+                        <div class="palac-rocket-container">
+                            <img src="img/image-removebg-preview.png" class="palac-rocket" alt="Ikona">
+                        </div>
+                        </div>
+                    
+                    <div class="logo1">
+                        <img src="img/logo_civitas_pion_kolor_rgb.png" alt="Logo Civitas" class="h-12 w-auto object-contain ml-2">
+                    </div>
+                </a>
+
+                <div class="hidden lg:flex items-center space-x-6 xl:space-x-8">
+                    <a href="#rodzaje-studiow" class="text-sm font-medium text-slate-600 hover:text-brand transition">Kandydaci</a>
+                    <a href="#" class="text-sm font-medium text-slate-600 hover:text-brand transition">Studenci</a>
+                    <a href="#lokalizacja" class="text-sm font-medium text-slate-600 hover:text-brand transition">Uczelnia</a>
+                    <a href="#" class="text-sm font-medium text-slate-600 hover:text-brand transition">Nauka i projekty</a>
+                    <a href="#kontakt" class="text-sm font-medium text-slate-600 hover:text-brand transition">Kontakt</a>
+                    
+                    <div class="flex items-center gap-3 border-l border-slate-200 pl-6">
+                        <a href="#" class="px-5 py-2.5 bg-pink-600 text-white text-sm font-bold rounded hover:bg-pink-700 transition shadow-md shadow-pink-600/20">
+                            Wirtualna Uczelnia
+                        </a>
+                        
+                        <a href="#rekrutacja" class="px-5 py-2.5 border-2 border-brand text-brand text-sm font-bold rounded hover:bg-brand hover:text-white transition">
+                            Rekrutacja Online
+                        </a>
+                    </div>
+                </div>
+
+                <div class="lg:hidden flex items-center gap-4">
+                    <a href="#rekrutacja" class="text-xs font-bold bg-brand text-white px-3 py-2 rounded md:hidden">Rekrutacja</a>
+                    <button id="mobile-menu-btn" class="text-slate-600 hover:text-brand focus:outline-none p-2">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="hidden lg:hidden bg-white border-t border-slate-100 absolute w-full shadow-xl">
+            <div class="px-4 pt-2 pb-6 space-y-1">
+                <a href="#rodzaje-studiow" class="block px-3 py-3 text-base font-medium text-slate-600 hover:bg-slate-50 hover:text-brand rounded-md">Kandydaci</a>
+                <a href="#" class="block px-3 py-3 text-base font-medium text-slate-600 hover:bg-slate-50 hover:text-brand rounded-md">Studenci</a>
+                <a href="#lokalizacja" class="block px-3 py-3 text-base font-medium text-slate-600 hover:bg-slate-50 hover:text-brand rounded-md">Uczelnia</a>
+                <a href="#" class="block px-3 py-3 text-base font-medium text-slate-600 hover:bg-slate-50 hover:text-brand rounded-md">Nauka i projekty</a>
+                <a href="#kontakt" class="block px-3 py-3 text-base font-medium text-slate-600 hover:bg-slate-50 hover:text-brand rounded-md">Kontakt</a>
+
+                <div class="mt-4 space-y-3">
+                    <a href="#" class="block w-full px-3 py-3 text-center font-bold bg-pink-600 text-white rounded-md shadow-md">
+                        Wirtualna Uczelnia
+                    </a>
+                    <a href="#rekrutacja" class="block w-full px-3 py-3 text-center font-bold bg-brand text-white rounded-md shadow-md">
+                        ZAPISZ SIĘ ONLINE &rarr;
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="relative pt-10 flex items-center justify-center min-h-[600px] lg:h-[85vh] reveal">
+        <div class="absolute inset-0 z-0">
+            <div class="absolute inset-0 bg-hero-pattern bg-cover bg-center bg-no-repeat"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-brand/90 via-brand/70 to-brand/40 mix-blend-multiply"></div>
+        </div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center md:text-left">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="space-y-8 reveal delay-100">
+                    <div class="inline-flex items-center px-4 py-1.5 rounded-full border border-blue-300/30 bg-blue-900/40 text-blue-100 text-xs font-bold tracking-wide uppercase backdrop-blur-sm shadow-sm">
+                        <span class="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
+                        Rekrutacja 2026/2027 otwarta
+                    </div>
+                    <h1 class="text-4xl md:text-5xl lg:text-7xl font-serif font-bold text-white leading-tight drop-shadow-lg">
+                        Twój sukces <br/>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-200 to-white">zaczyna się tutaj.</span>
+                    </h1>
+                    <p class="text-lg md:text-xl text-slate-200 font-light max-w-lg mx-auto md:mx-0 leading-relaxed opacity-90">
+                        Uniwersytet Civitas w Pałacu Kultury i Nauki. Wybierz jakość, praktykę i prestiżową lokalizację.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 pt-2 justify-center md:justify-start">
+                        <a href="#rekrutacja" class="px-8 py-4 bg-white text-brand font-bold rounded shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.5)] hover:bg-blue-50 transition transform hover:-translate-y-1 text-center">
+                            Rekrutacja Online
+                        </a>
+                        <a href="#rodzaje-studiow" class="px-8 py-4 border border-white/30 bg-brand/30 text-white font-medium rounded hover:bg-white/10 transition backdrop-blur-sm text-center">
+                            Zobacz ofertę
+                        </a>
+                    </div>
+                </div>
+
+                <div class="hidden md:block relative reveal delay-200">
+                    <div class="absolute -inset-1 bg-gradient-to-tr from-blue-400 to-brand-light rounded-2xl blur opacity-40"></div>
+                    <div class="relative bg-white/10 backdrop-blur-md p-10 rounded-xl shadow-2xl border border-white/20 text-white flex flex-col items-center justify-center text-center">
+                        <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mb-4">
+                             <svg class="w-8 h-8 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                        </div>
+                        <div class="text-6xl font-serif font-bold text-white mb-2">12.</div>
+                        <div class="text-xl font-medium text-blue-100 uppercase tracking-widest">Piętro PKiN</div>
+                        <p class="mt-4 text-sm text-blue-200 max-w-xs mx-auto opacity-80 border-t border-white/20 pt-4">
+                            Studiuj w ikonie Warszawy. Najwyższy poziom edukacji, dosłownie.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section id="rodzaje-studiow" class="py-20 bg-slate-50 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <span class="text-brand font-bold uppercase tracking-widest text-xs">Edukacja dla każdego</span>
+                <h2 class="text-3xl md:text-4xl font-serif font-bold text-slate-900 mt-2 mb-4">Wybierz swój poziom studiów</h2>
+                <div class="h-1 w-20 bg-brand mx-auto rounded"></div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <a href="#oferta" class="category-card reveal delay-100 group bg-white p-8 rounded-xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition duration-300 border border-slate-100 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-brand/5 rounded-bl-full -mr-4 -mt-4 transition group-hover:bg-brand/10"></div>
+                    <div class="text-brand mb-4">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Studia I Stopnia</h3>
+                    <p class="text-slate-500 text-sm mb-4">Licencjackie i Inżynierskie. Rozpocznij swoją karierę zawodową.</p>
+                    <span class="flex items-center text-brand font-semibold text-sm">
+                        Wybierz kierunek <svg class="arrow-icon w-4 h-4 ml-2 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </span>
+                </a>
+
+                <a href="#oferta" class="category-card reveal delay-200 group bg-white p-8 rounded-xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition duration-300 border border-slate-100 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-brand/5 rounded-bl-full -mr-4 -mt-4 transition group-hover:bg-brand/10"></div>
+                    <div class="text-brand mb-4">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Studia II Stopnia</h3>
+                    <p class="text-slate-500 text-sm mb-4">Magisterskie. Pogłęb swoją wiedzę i zdobądź tytuł magistra.</p>
+                    <span class="flex items-center text-brand font-semibold text-sm">
+                        Wybierz kierunek <svg class="arrow-icon w-4 h-4 ml-2 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </span>
+                </a>
+
+                <a href="#oferta" class="category-card reveal delay-300 group bg-white p-8 rounded-xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition duration-300 border border-slate-100 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-brand/5 rounded-bl-full -mr-4 -mt-4 transition group-hover:bg-brand/10"></div>
+                    <div class="text-brand mb-4">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Jednolite Magisterskie</h3>
+                    <p class="text-slate-500 text-sm mb-4">Prawo i Psychologia. 5-letni cykl kształcenia.</p>
+                    <span class="flex items-center text-brand font-semibold text-sm">
+                        Wybierz kierunek <svg class="arrow-icon w-4 h-4 ml-2 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </span>
+                </a>
+
+                <a href="#oferta" class="category-card reveal delay-100 group bg-white p-8 rounded-xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition duration-300 border border-slate-100 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-brand/5 rounded-bl-full -mr-4 -mt-4 transition group-hover:bg-brand/10"></div>
+                    <div class="text-brand mb-4">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Podyplomowe</h3>
+                    <p class="text-slate-500 text-sm mb-4">Dla aktywnych zawodowo. Zdobądź nowe kompetencje w weekendy.</p>
+                    <span class="flex items-center text-brand font-semibold text-sm">
+                        Wybierz kierunek <svg class="arrow-icon w-4 h-4 ml-2 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </span>
+                </a>
+
+                <a href="#oferta" class="category-card reveal delay-200 group bg-brand text-white p-8 rounded-xl shadow-xl hover:-translate-y-1 transition duration-300 relative overflow-hidden">
+                    <div class="absolute inset-0 bg-blue-900/50"></div>
+                    <div class="relative z-10">
+                        <div class="text-white mb-4">
+                            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">Studia MBA</h3>
+                        <p class="text-blue-100 text-sm mb-4">Master of Business Administration. Prestiż dla menedżerów.</p>
+                        <span class="flex items-center font-bold text-sm">
+                            Aplikuj <svg class="arrow-icon w-4 h-4 ml-2 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                        </span>
+                    </div>
+                </a>
+
+                <a href="#oferta" class="category-card reveal delay-300 group bg-white p-8 rounded-xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition duration-300 border border-slate-100 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-brand/5 rounded-bl-full -mr-4 -mt-4 transition group-hover:bg-brand/10"></div>
+                    <div class="text-brand mb-4">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Kursy i Szkolenia</h3>
+                    <p class="text-slate-500 text-sm mb-4">Krótkie formy kształcenia. Certyfikowane warsztaty.</p>
+                    <span class="flex items-center text-brand font-semibold text-sm">
+                        Zobacz listę <svg class="arrow-icon w-4 h-4 ml-2 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="lokalizacja" class="py-24 bg-white overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
+                <div class="mb-12 lg:mb-0 relative reveal">
+                    <div class="absolute top-0 left-0 -translate-x-6 -translate-y-6 w-24 h-24 bg-brand/10 rounded-full blur-xl"></div>
+                    <div class="absolute bottom-0 right-0 translate-x-6 translate-y-6 w-32 h-32 bg-brand/10 rounded-full blur-xl"></div>
+                    <img src="img/Collegium-Civitas-w-Warszawie-kierunki-studiow.png" onerror="this.src='https://images.unsplash.com/photo-1554906338-7952467d0130?q=80&w=2070&auto=format&fit=crop'" alt="Wnętrza uczelni" class="relative rounded-2xl shadow-2xl w-full object-cover h-[500px]">
+                    
+                    <div class="absolute bottom-8 left-8 bg-white/95 backdrop-blur px-6 py-4 rounded-lg shadow-lg border-l-4 border-brand max-w-xs">
+                        <p class="font-serif font-bold text-brand text-lg">12. Piętro</p>
+                        <p class="text-xs text-slate-600">Najwyżej położone sale wykładowe w Polsce.</p>
+                    </div>
+                </div>
+
+                <div class="reveal delay-200">
+                    <span class="text-brand font-bold tracking-wider uppercase text-sm mb-2 block">Lokalizacja Premium</span>
+                    <h2 class="text-4xl font-serif font-bold text-slate-900 mb-6">Studiuj w sercu Warszawy</h2>
+                    <p class="text-slate-600 text-lg mb-6 leading-relaxed">
+                        Uniwersytet Civitas mieści się w Pałacu Kultury i Nauki. To nie tylko prestiżowy adres, to centrum kulturalnego i biznesowego życia stolicy.
+                    </p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex gap-4">
+                            <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-brand font-bold shrink-0">01</div>
+                            <div>
+                                <h4 class="font-bold text-slate-900">Doskonały dojazd</h4>
+                                <p class="text-slate-600 text-sm">Przecięcie obu linii metra (Świętokrzyska/Centrum), dworzec PKP i pętla autobusowa.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-brand font-bold shrink-0">02</div>
+                            <div>
+                                <h4 class="font-bold text-slate-900">Nowoczesna infrastruktura</h4>
+                                <p class="text-slate-600 text-sm">Sale wyposażone w sprzęt multimedialny, strefy relaksu i biblioteka cyfrowa.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-brand font-bold shrink-0">03</div>
+                            <div>
+                                <h4 class="font-bold text-slate-900">Otoczenie biznesu</h4>
+                                <p class="text-slate-600 text-sm">Sąsiedztwo z globalnymi korporacjami ułatwia znalezienie stażu jeszcze w trakcie studiów.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="oplaty" class="py-24 bg-brand relative">
+        <svg class="absolute top-0 left-0 transform -translate-x-1/2 -translate-y-1/2 text-white/5 w-96 h-96" fill="currentColor" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50"/></svg>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-3xl md:text-4xl font-serif font-bold text-white mb-4">Edukacja prywatna dostępna dla Ciebie</h2>
+                <p class="text-blue-200 max-w-2xl mx-auto text-lg">Jasne zasady finansowania. Płacisz za jakość, nie za markę.</p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-2xl overflow-hidden max-w-4xl mx-auto md:flex reveal delay-100">
+                <div class="md:w-1/2 p-10 flex flex-col justify-center bg-slate-50 border-r border-slate-100">
+                    <p class="text-slate-500 font-medium mb-2 uppercase tracking-wide text-xs">Miesięczne czesne</p>
+                    <div class="flex items-baseline gap-2 mb-4">
+                        <span class="text-6xl font-bold text-brand">750</span>
+                        <span class="text-2xl text-slate-400 font-medium">PLN</span>
+                    </div>
+                    <p class="text-sm text-slate-500 mb-6">Kwota gwarantowana w umowie. Brak ukrytych opłat egzaminacyjnych czy wpisowego.</p>
+                    <a href="#rekrutacja" class="block w-full text-center bg-brand text-white font-bold py-4 rounded-lg hover:bg-brand-light transition shadow-lg shadow-brand/20">
+                        Zapisz się teraz
+                    </a>
+                </div>
+                <div class="md:w-1/2 p-10">
+                    <h3 class="font-bold text-slate-900 text-lg mb-6">Co zawiera czesne?</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-center text-slate-600 text-sm">
+                            <svg class="w-5 h-5 text-green-500 mr-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            Pełen dostęp do zajęć stacjonarnych i online
+                        </li>
+                        <li class="flex items-center text-slate-600 text-sm">
+                            <svg class="w-5 h-5 text-green-500 mr-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            Materiały dydaktyczne w chmurze
+                        </li>
+                        <li class="flex items-center text-slate-600 text-sm">
+                            <svg class="w-5 h-5 text-green-500 mr-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            Dostęp do strefy coworkingowej w PKiN
+                        </li>
+                        <li class="flex items-center text-slate-600 text-sm">
+                            <svg class="w-5 h-5 text-green-500 mr-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            Pakiet Office 365 dla studenta
+                        </li>
+                        <li class="flex items-center text-slate-600 text-sm">
+                            <svg class="w-5 h-5 text-green-500 mr-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            Doradztwo zawodowe
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="oferta" class="py-24 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
+                <div class="reveal">
+                    <h2 class="text-3xl font-serif font-bold text-brand mb-2">Przykładowe Kierunki</h2>
+                    <p class="text-slate-500">Programy dostosowane do rynku pracy.</p>
+                </div>
+                <a href="#" class="text-brand font-semibold hover:text-brand-light flex items-center group reveal delay-100">
+                    Zobacz pełen katalog 
+                    <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </a>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-xl shadow-sm hover:shadow-xl transition duration-300 border border-slate-100 group reveal delay-100">
+                    <div class="h-12 w-12 bg-blue-100 text-brand rounded-lg flex items-center justify-center mb-6 group-hover:bg-brand group-hover:text-white transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Nowe Media i PR</h3>
+                    <p class="text-slate-600 mb-6 text-sm leading-relaxed">Naucz się zarządzać wizerunkiem w sieci. Social media, copywriting i komunikacja kryzysowa.</p>
+                    <a href="#" class="text-brand text-sm font-bold uppercase tracking-wide hover:underline">Więcej informacji</a>
+                </div>
+
+                <div class="bg-white p-8 rounded-xl shadow-sm hover:shadow-xl transition duration-300 border border-slate-100 group reveal delay-200">
+                    <div class="h-12 w-12 bg-blue-100 text-brand rounded-lg flex items-center justify-center mb-6 group-hover:bg-brand group-hover:text-white transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Prawo w Biznesie</h3>
+                    <p class="text-slate-600 mb-6 text-sm leading-relaxed">Praktyczne aspekty prawa dla przedsiębiorców. Umowy, podatki i ochrona danych.</p>
+                    <a href="#" class="text-brand text-sm font-bold uppercase tracking-wide hover:underline">Więcej informacji</a>
+                </div>
+
+                <div class="bg-white p-8 rounded-xl shadow-sm hover:shadow-xl transition duration-300 border border-slate-100 group reveal delay-300">
+                    <div class="h-12 w-12 bg-blue-100 text-brand rounded-lg flex items-center justify-center mb-6 group-hover:bg-brand group-hover:text-white transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Zarządzanie</h3>
+                    <p class="text-slate-600 mb-6 text-sm leading-relaxed">Zarządzanie projektami (PM), zespołami rozproszonymi i start-upami.</p>
+                    <a href="#" class="text-brand text-sm font-bold uppercase tracking-wide hover:underline">Więcej informacji</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="kontakt" class="bg-brand-dark text-white border-t border-white/10 pt-16 pb-8 reveal">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+                <div>
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-8 h-8 bg-white text-brand flex items-center justify-center rounded font-serif font-bold">C</div>
+                        <span class="font-serif text-lg font-bold">Uniwersytet Civitas</span>
+                    </div>
+                    <p class="text-slate-400 text-sm mb-6">
+                        Uczelnia niepubliczna wpisana do rejestru pod numerem 123. Kształcimy praktycznie.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-slate-400 hover:text-white transition"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg></a>
+                        <a href="#" class="text-slate-400 hover:text-white transition"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-serif font-bold mb-4">Kontakt</h4>
+                    <ul class="space-y-3 text-slate-400 text-sm">
+                        <li class="flex items-start">
+                            <span class="mr-2 text-brand-light">📍</span>
+                            Pałac Kultury i Nauki, 12. piętro<br>Plac Defilad 1, Warszawa
+                        </li>
+                        <li class="flex items-center">
+                            <span class="mr-2 text-brand-light">📞</span>
+                            +48 22 656 76 00
+                        </li>
+                        <li class="flex items-center">
+                            <span class="mr-2 text-brand-light">✉️</span>
+                            rekrutacja@civitas.edu.pl
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-serif font-bold mb-4">Szybkie linki</h4>
+                    <ul class="space-y-2 text-slate-400 text-sm">
+                        <li><a href="#" class="hover:text-white transition">Wirtualna Uczelnia (Logowanie)</a></li>
+                        <li><a href="#" class="hover:text-white transition">Biuro Karier</a></li>
+                        <li><a href="#" class="hover:text-white transition">Stypendia</a></li>
+                        <li><a href="#" class="hover:text-white transition">Erasmus+</a></li>
+                    </ul>
+                </div>
+
+                <div id="rekrutacja">
+                    <h4 class="text-white font-serif font-bold mb-4">Zacznij Rekrutację</h4>
+                    <p class="text-xs text-slate-400 mb-4">Zostaw e-mail, otrzymasz informator.</p>
+                    <form class="space-y-2">
+                        <input type="email" placeholder="Adres e-mail" class="w-full px-4 py-2 bg-brand-dark border border-slate-700 rounded text-sm text-white focus:outline-none focus:border-blue-400">
+                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white py-2 rounded text-sm font-medium transition">Odbierz Informator</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="border-t border-slate-800 pt-8 text-center text-slate-500 text-xs">
+                &copy; 2025 Uniwersytet Civitas. Wszelkie prawa zastrzeżone. Design: Jan Galewicz.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Obsługa menu mobilnego
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        menu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                menu.classList.add('hidden');
+            });
+        });
+
+        // Obsługa animacji Scroll Reveal
+        // Używamy IntersectionObserver do wykrywania elementów wchodzących w widok
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1 // Animacja odpala się, gdy 10% elementu jest widoczne
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target); // Przestań obserwować po odpaleniu animacji
+                }
+            });
+        }, observerOptions);
+
+        // Znajdź wszystkie elementy z klasą .reveal i zacznij je obserwować
+        document.querySelectorAll('.reveal').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+    
+</body>
+</html>
